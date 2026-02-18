@@ -1,15 +1,17 @@
 # OpenStreetMap Tile Server
 
-Docker Compose setup for running an OpenStreetMap tile server using [overv/openstreetmap-tile-server](https://github.com/Overv/openstreetmap-tile-server).
+All-in-one Docker setup for running an OpenStreetMap tile server with automatic data import and custom styles.
 
 ## Features
 
-- **Easy Setup**: Docker Compose configuration for simple deployment
-- **Environment-based Configuration**: All settings configured via `.env` file
-- **Custom Styles**: Support for custom map styles (place files in `./style/` directory)
-- **Automatic Updates**: Optional automatic tile updates from OSM
-- **CORS Enabled**: Cross-origin resource sharing enabled by default
-- **Persistent Storage**: Docker volumes for database and rendered tiles
+- **🚀 Pre-Built Images**: Build script creates images with all data pre-imported
+- **⚡ Instant Start**: Pre-built images run immediately without setup time
+- **📦 Easy Sharing**: Build once, share anywhere (Docker Hub, GHCR, or tar file)
+- **🎨 Custom Styles**: Support for custom map styles (place files in `./style/` directory)
+- **⚙️ Environment-based Configuration**: All settings configured via `.env` file
+- **🔄 Automatic Updates**: Optional automatic tile updates from OSM
+- **🌍 CORS Enabled**: Cross-origin resource sharing enabled by default
+- **💾 Tile Cache**: Optional volume for rendered tile persistence
 
 ## Quick Start
 
@@ -18,13 +20,125 @@ Docker Compose setup for running an OpenStreetMap tile server using [overv/opens
 - Docker installed and running
 - Docker Compose installed
 - At least 4GB RAM available
-- Sufficient disk space (Luxembourg: ~2GB, larger regions require more)
+- Sufficient disk space (Luxembourg: ~5GB, larger regions require more)
 
-## Build and Start Methods
+## Build Pre-Imported Image (Recommended for Sharing)
 
-### Method 1: Using Docker Compose (Recommended)
+### Method 1: Using Build Script
 
-This is the simplest method using Docker Compose profiles.
+This creates a complete image with all OSM data that can be shared easily.
+
+#### Step 1: Configure Region
+
+The `.env` file is pre-configured with Netherlands. Edit to change region:
+
+```bash
+# Edit .env to change region or settings
+# Default configuration:
+# - Region: Netherlands
+# - Port: 8080
+
+# Available regions: https://download.geofabrik.de/
+```
+
+#### Step 2: Build Image with Data Import
+
+**On Windows (PowerShell):**
+
+```powershell
+.\build-with-data.ps1
+```
+
+**On Linux/Mac:**
+
+```bash
+chmod +x build-with-data.sh
+./build-with-data.sh
+```
+
+This script will:
+
+1. Build the base Docker image
+2. Run a container to import OSM data
+3. Commit the container to create final image with all data
+
+**Import time**:
+
+- Luxembourg: ~5-10 minutes
+- Netherlands: ~30-60 minutes
+- Larger regions take longer
+
+#### Step 3: Run the Server
+
+```bash
+# Start the server (runs instantly!)
+docker-compose up -d
+```
+
+The server starts immediately with all data ready!
+
+#### Step 4: Access Your Tile Server
+
+- **Tiles API**: http://localhost:8080/tile/{z}/{x}/{y}.png
+- **Demo Map**: http://localhost:8080/
+- **MapLibre Demo**: http://localhost:8080/maplibre-demo.html
+
+---
+
+### Method 2: Simple Build (Import on First Run)
+
+For quick testing without creating a pre-built image:
+
+```bash
+# Build base image
+docker-compose build
+
+# Start (imports data on first run)
+docker-compose up -d
+
+# Monitor import progress
+docker-compose logs -f
+```
+
+**First run import time**: Same as Method 1 (Luxembourg ~5-10 mins, Netherlands ~30-60 mins)
+
+---
+
+## Sharing the Image
+
+The built image contains all OSM data and is ready to run immediately on any machine.
+
+See [BUILD.md](BUILD.md) for detailed instructions on:
+
+- Building and pushing to Docker Hub or GitHub Container Registry
+- Saving/loading images as tar files
+- Image size considerations
+- Building for different regions
+
+Quick example:
+
+```bash
+# Save to file for sharing (will be large: 3GB-50GB depending on region)
+docker save osm-tile-server:latest | gzip > osm-tile-server.tar.gz
+
+# Load on another machine
+docker load < osm-tile-server.tar.gz
+
+# Run immediately - no configuration needed!
+docker run -d -p 8080:80 -v osm-tiles:/data/tiles/ osm-tile-server:latest
+```
+
+The recipient can start using the tile server instantly with no download or import time.
+
+---
+
+## Alternative: Docker Compose (Legacy Method with Profiles)
+
+> **Note**: This section describes the original two-step profile-based approach using the base image. The recommended method above builds everything into a single image during the build phase.
+
+If you prefer the two-step import/run approach:
+
+### Method 2: Using Docker Compose Profiles
 
 #### Step 1: Configure Environment
 

@@ -1,50 +1,27 @@
 version: "3.8"
 
 services:
-  # Import service - runs once to import OSM data
-  osm-import:
-    image: overv/openstreetmap-tile-server
-    container_name: osm-import
-    environment:
-      - DOWNLOAD_PBF=${DOWNLOAD_PBF}
-      - DOWNLOAD_POLY=${DOWNLOAD_POLY}
-      - NAME_LUA=${NAME_LUA}
-      - NAME_STYLE=${NAME_STYLE}
-      - NAME_MML=${NAME_MML}
-      - NAME_SQL=${NAME_SQL}
-      - UPDATES=${UPDATES}
-      - THREADS=${THREADS}
-    volumes:
-      - osm-data:/data/database/
-      - osm-tiles:/data/tiles/
-      # - ./style:/data/style/
-    command: import
-    profiles:
-      - import
-
-  # Tile server service - runs continuously
+  # OSM tile server
   osm-tile-server:
-    image: overv/openstreetmap-tile-server
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: osm-tile-server:latest
     container_name: osm-tile-server
     ports:
       - "${SERVER_PORT}:80"
     environment:
+      - DOWNLOAD_PBF=${DOWNLOAD_PBF}
+      - DOWNLOAD_POLY=${DOWNLOAD_POLY}
       - UPDATES=${UPDATES}
       - ALLOW_CORS=${ALLOW_CORS}
       - THREADS=${THREADS}
       - AUTOVACUUM=${AUTOVACUUM}
       - PGPASSWORD=${PGPASSWORD}
     volumes:
-      - osm-data:/data/database/
       - osm-tiles:/data/tiles/
-      # - ./style:/data/style/
-    command: run
     restart: unless-stopped
-    profiles:
-      - run
 
 volumes:
-  osm-data:
-    name: osm-data
   osm-tiles:
     name: osm-tiles
