@@ -1,0 +1,177 @@
+{
+  "bounds": [-180, -85.0511, 180, 85.0511],
+  "center": [0, 0, 4],
+  "format": "png8",
+  "interactivity": false,
+  "minzoom": 0,
+  "maxzoom": 20,
+  "srs": "+proj=merc +a=6378137 +b=6378137 +lat_ts=0.0 +lon_0=0.0 +x_0=0.0 +y_0=0.0 +k=1.0 +units=m +nadgrids=@null +wktext +no_defs +over",
+  "Stylesheet": ["dark-theme.mss"],
+  "Layer": [
+    {
+      "id": "water-areas",
+      "name": "water-areas",
+      "class": "",
+      "geometry": "polygon",
+      "Datasource": {
+        "type": "postgis",
+        "table": "(SELECT way, name, way_area FROM planet_osm_polygon WHERE \"natural\" IN ('water', 'bay') OR waterway IN ('riverbank', 'dock', 'canal') OR landuse IN ('reservoir', 'basin')) AS water",
+        "key_field": "",
+        "geometry_field": "way",
+        "extent": "-20037508.34,-20037508.34,20037508.34,20037508.34",
+        "host": "localhost",
+        "port": "5432",
+        "user": "renderer",
+        "password": "renderer",
+        "dbname": "gis"
+      }
+    },
+    {
+      "id": "waterway",
+      "name": "waterway",
+      "class": "",
+      "geometry": "linestring",
+      "Datasource": {
+        "type": "postgis",
+        "table": "(SELECT way, name, waterway FROM planet_osm_line WHERE waterway IN ('river', 'stream', 'canal', 'drain', 'ditch')) AS waterway",
+        "key_field": "",
+        "geometry_field": "way",
+        "extent": "-20037508.34,-20037508.34,20037508.34,20037508.34",
+        "host": "localhost",
+        "port": "5432",
+        "user": "renderer",
+        "password": "renderer",
+        "dbname": "gis"
+      }
+    },
+    {
+      "id": "landuse",
+      "name": "landuse",
+      "class": "",
+      "geometry": "polygon",
+      "Datasource": {
+        "type": "postgis",
+        "table": "(SELECT way, landuse, \"natural\", leisure FROM planet_osm_polygon WHERE landuse IS NOT NULL OR \"natural\" IN ('wood', 'forest', 'grass') OR leisure = 'park') AS landuse",
+        "key_field": "",
+        "geometry_field": "way",
+        "extent": "-20037508.34,-20037508.34,20037508.34,20037508.34",
+        "host": "localhost",
+        "port": "5432",
+        "user": "renderer",
+        "password": "renderer",
+        "dbname": "gis"
+      }
+    },
+    {
+      "id": "buildings",
+      "name": "buildings",
+      "class": "",
+      "geometry": "polygon",
+      "Datasource": {
+        "type": "postgis",
+        "table": "(SELECT way FROM planet_osm_polygon WHERE building IS NOT NULL) AS buildings",
+        "key_field": "",
+        "geometry_field": "way",
+        "extent": "-20037508.34,-20037508.34,20037508.34,20037508.34",
+        "host": "localhost",
+        "port": "5432",
+        "user": "renderer",
+        "password": "renderer",
+        "dbname": "gis"
+      }
+    },
+    {
+      "id": "roads",
+      "name": "roads",
+      "class": "",
+      "geometry": "linestring",
+      "Datasource": {
+        "type": "postgis",
+        "table": "(SELECT way, highway, name FROM planet_osm_line WHERE highway IS NOT NULL ORDER BY z_order) AS roads",
+        "key_field": "",
+        "geometry_field": "way",
+        "extent": "-20037508.34,-20037508.34,20037508.34,20037508.34",
+        "host": "localhost",
+        "port": "5432",
+        "user": "renderer",
+        "password": "renderer",
+        "dbname": "gis"
+      }
+    },
+    {
+      "id": "railway",
+      "name": "railway",
+      "class": "",
+      "geometry": "linestring",
+      "Datasource": {
+        "type": "postgis",
+        "table": "(SELECT way, railway FROM planet_osm_line WHERE railway = 'rail') AS railway",
+        "key_field": "",
+        "geometry_field": "way",
+        "extent": "-20037508.34,-20037508.34,20037508.34,20037508.34",
+        "host": "localhost",
+        "port": "5432",
+        "user": "renderer",
+        "password": "renderer",
+        "dbname": "gis"
+      }
+    },
+    {
+      "id": "boundaries",
+      "name": "boundaries",
+      "class": "",
+      "geometry": "linestring",
+      "Datasource": {
+        "type": "postgis",
+        "table": "(SELECT way, admin_level FROM planet_osm_line WHERE boundary = 'administrative' AND admin_level IN ('2', '4')) AS boundaries",
+        "key_field": "",
+        "geometry_field": "way",
+        "extent": "-20037508.34,-20037508.34,20037508.34,20037508.34",
+        "host": "localhost",
+        "port": "5432",
+        "user": "renderer",
+        "password": "renderer",
+        "dbname": "gis"
+      }
+    },
+    {
+      "id": "place-labels",
+      "name": "place-labels",
+      "class": "",
+      "geometry": "point",
+      "Datasource": {
+        "type": "postgis",
+        "table": "(SELECT way, name, place FROM planet_osm_point WHERE place IN ('city', 'town', 'village', 'hamlet') AND name IS NOT NULL) AS places",
+        "key_field": "",
+        "geometry_field": "way",
+        "extent": "-20037508.34,-20037508.34,20037508.34,20037508.34",
+        "host": "localhost",
+        "port": "5432",
+        "user": "renderer",
+        "password": "renderer",
+        "dbname": "gis"
+      }
+    },
+    {
+      "id": "road-labels",
+      "name": "road-labels",
+      "class": "",
+      "geometry": "linestring",
+      "Datasource": {
+        "type": "postgis",
+        "table": "(SELECT way, name, highway FROM planet_osm_line WHERE highway IN ('motorway', 'trunk', 'primary', 'secondary', 'tertiary') AND name IS NOT NULL) AS road_labels",
+        "key_field": "",
+        "geometry_field": "way",
+        "extent": "-20037508.34,-20037508.34,20037508.34,20037508.34",
+        "host": "localhost",
+        "port": "5432",
+        "user": "renderer",
+        "password": "renderer",
+        "dbname": "gis"
+      }
+    }
+  ],
+  "name": "Dark Theme",
+  "description": "Dark theme for OpenStreetMap inspired by OpenFreeMap",
+  "attribution": "© OpenStreetMap contributors"
+}

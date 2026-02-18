@@ -1,0 +1,3 @@
+# Place your custom OpenStreetMap Carto style files here
+
+# The container will use the default openstreetmap-carto style if this directory is empty

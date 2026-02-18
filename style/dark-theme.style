@@ -1,0 +1,66 @@
+# Dark theme style configuration
+# Based on openstreetmap-carto style format
+
+# OsmType  Tag          DataType     Flags
+node,way   access       text         linear
+node,way   addr:housename      text  polygon
+node,way   addr:housenumber    text  polygon
+node,way   addr:interpolation  text  linear
+node,way   admin_level  text         linear
+node,way   aerialway    text         linear
+node,way   aeroway      text         polygon
+node,way   amenity      text         polygon
+node,way   area         text         # hard coded support for area=*
+node,way   barrier      text         linear
+node,way   bicycle      text
+node,way   boundary     text         linear
+node,way   bridge       text         linear
+node,way   building     text         polygon
+node,way   construction text         linear
+node,way   covered      text         linear
+node,way   foot         text
+node,way   harbour      text         polygon
+node,way   highway      text         linear
+node,way   historic     text         polygon
+node,way   horse        text
+node,way   junction     text         linear
+node,way   landuse      text         polygon
+node,way   layer        text         linear
+node,way   leisure      text         polygon
+node,way   lock         text         linear
+node,way   man_made     text         polygon
+node,way   military     text         polygon
+node,way   name         text         linear
+node,way   natural      text         polygon
+node,way   office       text         polygon
+node,way   oneway       text         linear
+node,way   place        text         polygon
+node,way   power        text         polygon
+node,way   railway      text         linear
+node,way   ref          text         linear
+node,way   religion     text
+node,way   route        text         linear
+node,way   service      text         linear
+node,way   shop         text         polygon
+node,way   sport        text         polygon
+node,way   surface      text         linear
+node,way   tourism      text         polygon
+node,way   tracktype    text         linear
+node,way   tunnel       text         linear
+node,way   water        text         polygon
+node,way   waterway     text         polygon
+node,way   wetland      text         polygon
+node,way   width        text         linear
+node,way   wood         text         linear
+node,way   z_order      int32        linear
+way        way_area     real                # way_area is calculated by osm2pgsql
+
+node,way   way_pixels   real                # Calculated by scripts
+
+# Area tags
+# We don't make columns for these tags, but objects with them are areas.
+# Mainly for use with hstore
+way        aerialway    text    polygon
+way        craft        text    polygon
+way        golf         text    polygon
+way        public_transport text polygon
